@@ -4,6 +4,7 @@ import logging
 import re
 from typing import List, Optional
 
+import openai
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
@@ -85,8 +86,14 @@ def send_interview_message(project_id: str, body: InterviewMessageRequest):
     system_prompt = build_interview_system_prompt(user, profile)
     try:
         assistant_text = call_llm(system_prompt, messages, profile)
-    except Exception as e:
-        logger.exception("LLM call failed during interview")
+    except openai.AuthenticationError:
+        logger.exception("OpenRouter authentication failed during interview")
+        raise HTTPException(status_code=502, detail="AI service authentication failed. Check your OPENROUTER_API_KEY.")
+    except openai.RateLimitError:
+        logger.exception("OpenRouter rate limit hit during interview")
+        raise HTTPException(status_code=429, detail="AI service rate limit reached. Please try again shortly.")
+    except openai.APIError as e:
+        logger.exception("OpenRouter API error during interview")
         raise HTTPException(status_code=502, detail="AI service is temporarily unavailable. Please try again.")
 
     # Check for interview completion

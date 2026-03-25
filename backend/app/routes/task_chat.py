@@ -3,6 +3,7 @@ import json
 import logging
 from typing import Optional
 
+import openai
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
@@ -89,8 +90,14 @@ def send_task_message(task_id: str, body: TaskChatRequest):
     system_prompt = build_task_chat_prompt(user, profile, project, task)
     try:
         assistant_text = call_llm(system_prompt, messages, profile)
-    except Exception as e:
-        logger.exception("LLM call failed during task chat")
+    except openai.AuthenticationError:
+        logger.exception("OpenRouter authentication failed during task chat")
+        raise HTTPException(status_code=502, detail="AI service authentication failed. Check your OPENROUTER_API_KEY.")
+    except openai.RateLimitError:
+        logger.exception("OpenRouter rate limit hit during task chat")
+        raise HTTPException(status_code=429, detail="AI service rate limit reached. Please try again shortly.")
+    except openai.APIError:
+        logger.exception("OpenRouter API error during task chat")
         raise HTTPException(status_code=502, detail="AI service is temporarily unavailable. Please try again.")
 
     # Detect marker
@@ -159,8 +166,14 @@ def generate_task_prompt(task_id: str):
 
     try:
         prompt_text = gen_prompt(user, profile, project, task)
-    except Exception as e:
-        logger.exception("LLM call failed during prompt generation")
+    except openai.AuthenticationError:
+        logger.exception("OpenRouter authentication failed during prompt generation")
+        raise HTTPException(status_code=502, detail="AI service authentication failed. Check your OPENROUTER_API_KEY.")
+    except openai.RateLimitError:
+        logger.exception("OpenRouter rate limit hit during prompt generation")
+        raise HTTPException(status_code=429, detail="AI service rate limit reached. Please try again shortly.")
+    except openai.APIError:
+        logger.exception("OpenRouter API error during prompt generation")
         raise HTTPException(status_code=502, detail="AI service is temporarily unavailable. Please try again.")
 
     with get_db() as conn:

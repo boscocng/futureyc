@@ -3,6 +3,7 @@ import json
 import logging
 from typing import List, Optional
 
+import openai
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
@@ -85,8 +86,14 @@ def send_scope_message(project_id: str, body: ScopeChatRequest):
     system_prompt = build_scope_chat_prompt(user, profile, project, tasks)
     try:
         assistant_text = call_llm(system_prompt, messages, profile)
-    except Exception as e:
-        logger.exception("LLM call failed during scope chat")
+    except openai.AuthenticationError:
+        logger.exception("OpenRouter authentication failed during scope chat")
+        raise HTTPException(status_code=502, detail="AI service authentication failed. Check your OPENROUTER_API_KEY.")
+    except openai.RateLimitError:
+        logger.exception("OpenRouter rate limit hit during scope chat")
+        raise HTTPException(status_code=429, detail="AI service rate limit reached. Please try again shortly.")
+    except openai.APIError:
+        logger.exception("OpenRouter API error during scope chat")
         raise HTTPException(status_code=502, detail="AI service is temporarily unavailable. Please try again.")
 
     # Detect markers
