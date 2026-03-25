@@ -20,7 +20,7 @@ export default function StepName() {
         }
         placeholder="Your name"
         autoFocus
-        className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 text-lg text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
+        className="w-full bg-white border border-[#D4D4D4] rounded-lg px-4 py-3 text-lg text-[#1A1A1A] placeholder-[#9B9B9B] focus:outline-none focus:border-[#2A5FE6] focus:ring-1 focus:ring-[#2A5FE6]/20 transition-colors duration-150"
       />
     </StepShell>
   )

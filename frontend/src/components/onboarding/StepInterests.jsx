@@ -68,7 +68,7 @@ export default function StepInterests() {
         ))}
       </div>
       {error && (
-        <p className="text-red-400 text-sm mt-4">{error}</p>
+        <p className="text-[#DC2626] text-sm mt-4">{error}</p>
       )}
     </StepShell>
   )

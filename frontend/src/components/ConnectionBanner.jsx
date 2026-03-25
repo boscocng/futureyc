@@ -24,7 +24,6 @@ export default function ConnectionBanner() {
       }
     }
 
-    // Check every 10 seconds
     intervalRef.current = setInterval(check, 10000)
 
     return () => {
@@ -36,11 +35,11 @@ export default function ConnectionBanner() {
   if (connected) return null
 
   return (
-    <div className="bg-amber-500/10 border-b border-amber-500/20 px-6 py-2.5 flex items-center justify-center gap-2">
+    <div className="bg-[#FFFBEB] border-b border-[#FDE68A] px-6 py-2.5 flex items-center justify-center gap-2">
       {retrying && (
-        <div className="h-3.5 w-3.5 border-2 border-amber-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+        <div className="h-3.5 w-3.5 border-2 border-[#E6930A] border-t-transparent rounded-full animate-spin flex-shrink-0" />
       )}
-      <p className="text-sm text-amber-300 font-medium">
+      <p className="text-sm text-[#A16207] font-medium">
         Connection lost. Retrying...
       </p>
     </div>

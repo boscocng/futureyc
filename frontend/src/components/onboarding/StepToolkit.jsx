@@ -29,7 +29,7 @@ export default function StepToolkit() {
     >
       <div className="space-y-6">
         <div>
-          <h3 className="text-sm font-medium text-zinc-400 mb-3">Languages</h3>
+          <h3 className="text-sm font-medium text-[#6B6B6B] mb-3">Languages</h3>
           <div className="flex flex-wrap gap-2">
             {LANGUAGES.map((l) => (
               <SelectCard
@@ -42,7 +42,7 @@ export default function StepToolkit() {
           </div>
         </div>
         <div>
-          <h3 className="text-sm font-medium text-zinc-400 mb-3">Frameworks</h3>
+          <h3 className="text-sm font-medium text-[#6B6B6B] mb-3">Frameworks</h3>
           <div className="flex flex-wrap gap-2">
             {FRAMEWORKS.map((f) => (
               <SelectCard

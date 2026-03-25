@@ -48,13 +48,20 @@ function toggleInList(list, item) {
   return list.includes(item) ? list.filter((v) => v !== item) : [...list, item]
 }
 
+function SectionLabel({ children }) {
+  return <label className="block text-sm font-medium text-[#1A1A1A] mb-2">{children}</label>
+}
+
+function ReadonlyNote({ children }) {
+  return <p className="text-xs text-[#9B9B9B] mt-1.5">{children}</p>
+}
+
 export default function Settings() {
   const { user, profile, loading: userLoading, setUserData } = useUser()
   const navigate = useNavigate()
 
   useBreadcrumbs([{ label: 'Settings' }])
 
-  // Local form state
   const [name, setName] = useState('')
   const [role, setRole] = useState('')
   const [codingComfort, setCodingComfort] = useState(1)
@@ -67,17 +74,12 @@ export default function Settings() {
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState(null)
 
-  // Pre-fill from profile
   useEffect(() => {
     if (userLoading) return
-    if (!user) {
-      navigate('/onboarding')
-      return
-    }
+    if (!user) { navigate('/onboarding'); return }
     setName(user.name || '')
     setRole(user.role || '')
     if (profile) {
-      // Convert 0-4 back to 1-5 for the UI (onboarding uses 1-5, backend stores 0-4)
       setCodingComfort(Math.max(1, (profile.general_coding_comfort || 0) + 1))
       setLanguages(profile.known_languages || [])
       setFrameworks(profile.known_frameworks || [])
@@ -111,36 +113,35 @@ export default function Settings() {
 
   if (userLoading) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="h-8 w-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="h-8 w-8 border-2 border-[#2A5FE6] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
+    <div className="min-h-screen bg-white text-[#1A1A1A]">
       <main className="max-w-2xl mx-auto px-6 py-8 space-y-8">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
-          <p className="text-zinc-400 mt-1">Update your profile and preferences.</p>
+          <h1 className="text-2xl font-semibold text-[#1A1A1A]">Settings</h1>
+          <p className="text-[#6B6B6B] mt-1">Update your profile and preferences.</p>
         </div>
 
         {/* Name */}
         <section>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">Name</label>
+          <SectionLabel>Name</SectionLabel>
           <input
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
             disabled
-            className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-sm text-zinc-400 cursor-not-allowed"
+            className="w-full bg-[#FAFAFA] border border-[#E5E5E5] rounded-lg px-4 py-2.5 text-sm text-[#9B9B9B] cursor-not-allowed"
           />
-          <p className="text-xs text-zinc-600 mt-1">Name cannot be changed after onboarding.</p>
+          <ReadonlyNote>Name cannot be changed after onboarding.</ReadonlyNote>
         </section>
 
         {/* Role */}
         <section>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">Role</label>
+          <SectionLabel>Role</SectionLabel>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {ROLES.map((r) => (
               <SelectCard
@@ -151,26 +152,26 @@ export default function Settings() {
               />
             ))}
           </div>
-          <p className="text-xs text-zinc-600 mt-1">Role cannot be changed after onboarding.</p>
+          <ReadonlyNote>Role cannot be changed after onboarding.</ReadonlyNote>
         </section>
 
         {/* Coding comfort */}
         <section>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">Coding comfort</label>
+          <SectionLabel>Coding comfort</SectionLabel>
           <div className="space-y-2">
             {CODING_LEVELS.map((l) => (
               <button
                 key={l.value}
                 type="button"
                 onClick={() => setCodingComfort(l.value)}
-                className={`w-full text-left px-4 py-3 rounded-lg border text-sm font-medium transition-all duration-200 cursor-pointer
+                className={`w-full text-left px-4 py-3 rounded-xl border text-sm font-medium transition-all duration-150 cursor-pointer
                   ${
                     codingComfort === l.value
-                      ? 'border-indigo-500 bg-indigo-500/10 text-indigo-300'
-                      : 'border-zinc-700 bg-zinc-800/50 text-zinc-300 hover:border-zinc-500 hover:bg-zinc-800'
+                      ? 'border-[#2A5FE6] bg-[#F0F5FF] text-[#2A5FE6]'
+                      : 'border-[#E5E5E5] bg-white text-[#1A1A1A] hover:border-[#D4D4D4] hover:bg-[#F5F5F5]'
                   }`}
               >
-                <span className="text-zinc-500 mr-3">{l.value}</span>
+                <span className="text-[#9B9B9B] mr-3">{l.value}</span>
                 {l.label}
               </button>
             ))}
@@ -179,7 +180,7 @@ export default function Settings() {
 
         {/* Languages */}
         <section>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">Languages</label>
+          <SectionLabel>Languages</SectionLabel>
           <div className="flex flex-wrap gap-2">
             {LANGUAGES.map((l) => (
               <SelectCard
@@ -194,7 +195,7 @@ export default function Settings() {
 
         {/* Frameworks */}
         <section>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">Frameworks</label>
+          <SectionLabel>Frameworks</SectionLabel>
           <div className="flex flex-wrap gap-2">
             {FRAMEWORKS.map((f) => (
               <SelectCard
@@ -209,7 +210,7 @@ export default function Settings() {
 
         {/* AI Tools */}
         <section>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">AI tools</label>
+          <SectionLabel>AI tools</SectionLabel>
           <div className="flex flex-wrap gap-2">
             {AI_TOOLS.map((t) => (
               <SelectCard
@@ -224,7 +225,7 @@ export default function Settings() {
 
         {/* Interests */}
         <section>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">Interests</label>
+          <SectionLabel>Interests</SectionLabel>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {INTERESTS.map((i) => (
               <SelectCard
@@ -243,16 +244,12 @@ export default function Settings() {
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-semibold transition-colors cursor-pointer disabled:opacity-50"
+            className="px-6 py-2.5 bg-[#2A5FE6] hover:bg-[#1E4FCC] text-white rounded-lg text-sm font-medium transition-colors duration-150 cursor-pointer disabled:opacity-50"
           >
             {saving ? 'Saving...' : 'Save Changes'}
           </button>
-          {saved && (
-            <span className="text-sm text-emerald-400 font-medium">Changes saved!</span>
-          )}
-          {error && (
-            <span className="text-sm text-red-400">{error}</span>
-          )}
+          {saved && <span className="text-sm text-[#16A34A] font-medium">Changes saved!</span>}
+          {error && <span className="text-sm text-[#DC2626]">{error}</span>}
         </div>
       </main>
     </div>

@@ -19,24 +19,27 @@ export default function ProjectCard({ project }) {
     <button
       type="button"
       onClick={() => navigate(`/project/${project.id}`)}
-      className="w-full text-left p-5 rounded-xl border border-zinc-800 bg-zinc-900/50 hover:border-zinc-600 hover:bg-zinc-900 transition-all duration-200 cursor-pointer group"
+      className="w-full text-left p-6 rounded-xl border border-[#E5E5E5] bg-white transition-all duration-150 cursor-pointer group"
+      style={{ boxShadow: 'none' }}
+      onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)'}
+      onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'none'}
     >
       <div className="flex items-start justify-between gap-3 mb-3">
-        <h3 className="font-semibold text-zinc-100 group-hover:text-white truncate">
+        <h3 className="font-semibold text-[#1A1A1A] truncate">
           {project.name}
         </h3>
         <StatusBadge status={project.status} />
       </div>
 
       {project.scope_summary ? (
-        <p className="text-sm text-zinc-400 line-clamp-2 mb-4">
+        <p className="text-sm text-[#6B6B6B] line-clamp-2 mb-4 leading-relaxed">
           {project.scope_summary}
         </p>
       ) : (
-        <p className="text-sm text-zinc-600 italic mb-4">No scope defined yet</p>
+        <p className="text-sm text-[#9B9B9B] italic mb-4">No scope defined yet</p>
       )}
 
-      <div className="flex items-center justify-between text-xs text-zinc-500">
+      <div className="flex items-center justify-between text-xs text-[#9B9B9B]">
         <span>
           {project.task_count} {project.task_count === 1 ? 'task' : 'tasks'}
         </span>

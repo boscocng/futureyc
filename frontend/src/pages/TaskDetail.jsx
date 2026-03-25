@@ -20,21 +20,13 @@ function EditableTitle({ value, onSave }) {
   const [draft, setDraft] = useState(value)
   const inputRef = useRef(null)
 
-  useEffect(() => {
-    setDraft(value)
-  }, [value])
-
-  useEffect(() => {
-    if (editing) inputRef.current?.focus()
-  }, [editing])
+  useEffect(() => { setDraft(value) }, [value])
+  useEffect(() => { if (editing) inputRef.current?.focus() }, [editing])
 
   function handleSave() {
     const trimmed = draft.trim()
-    if (trimmed && trimmed !== value) {
-      onSave(trimmed)
-    } else {
-      setDraft(value)
-    }
+    if (trimmed && trimmed !== value) onSave(trimmed)
+    else setDraft(value)
     setEditing(false)
   }
 
@@ -48,12 +40,9 @@ function EditableTitle({ value, onSave }) {
         onBlur={handleSave}
         onKeyDown={(e) => {
           if (e.key === 'Enter') handleSave()
-          if (e.key === 'Escape') {
-            setDraft(value)
-            setEditing(false)
-          }
+          if (e.key === 'Escape') { setDraft(value); setEditing(false) }
         }}
-        className="text-xl font-bold tracking-tight bg-transparent border-b border-indigo-500 outline-none text-zinc-100 w-full"
+        className="text-xl font-semibold bg-transparent border-b border-[#2A5FE6] outline-none text-[#1A1A1A] w-full"
       />
     )
   }
@@ -62,7 +51,7 @@ function EditableTitle({ value, onSave }) {
     <button
       type="button"
       onClick={() => setEditing(true)}
-      className="text-xl font-bold tracking-tight text-left hover:text-indigo-300 transition-colors cursor-pointer"
+      className="text-xl font-semibold text-left text-[#1A1A1A] hover:text-[#2A5FE6] transition-colors duration-150 cursor-pointer"
       title="Click to edit"
     >
       {value}
@@ -84,34 +73,33 @@ function PromptModal({ prompt, onClose, onRegenerate, regenerating }) {
 
   return (
     <>
+      <div className="fixed inset-0 z-40 bg-black/30" onClick={onClose} />
       <div
-        className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div className="fixed inset-4 sm:inset-10 z-50 bg-zinc-950 border border-zinc-800 rounded-2xl flex flex-col shadow-2xl">
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800/50 flex-shrink-0">
-          <h2 className="text-sm font-semibold">Generated Prompt</h2>
+        className="fixed inset-4 sm:inset-10 z-50 bg-white border border-[#E5E5E5] rounded-2xl flex flex-col"
+        style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.08)' }}
+      >
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E5E5E5] flex-shrink-0">
+          <h2 className="text-sm font-semibold text-[#1A1A1A]">Generated Prompt</h2>
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={onRegenerate}
               disabled={regenerating}
-              className="px-3 py-1.5 text-xs font-medium rounded-lg border border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:border-zinc-500 transition-colors cursor-pointer disabled:opacity-50"
+              className="px-3 py-1.5 text-xs font-medium rounded-lg border border-[#D4D4D4] text-[#6B6B6B] hover:text-[#1A1A1A] hover:border-[#9B9B9B] transition-colors duration-150 cursor-pointer disabled:opacity-50"
             >
               {regenerating ? 'Regenerating...' : 'Regenerate'}
             </button>
             <button
               type="button"
               onClick={handleCopy}
-              className="px-3 py-1.5 text-xs font-medium rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition-colors cursor-pointer"
+              className="px-3 py-1.5 text-xs font-medium rounded-lg bg-[#2A5FE6] hover:bg-[#1E4FCC] text-white transition-colors duration-150 cursor-pointer"
             >
               {copied ? 'Copied!' : 'Copy'}
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer p-1"
+              className="text-[#9B9B9B] hover:text-[#1A1A1A] transition-colors duration-150 cursor-pointer p-1"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -119,10 +107,8 @@ function PromptModal({ prompt, onClose, onRegenerate, regenerating }) {
             </button>
           </div>
         </div>
-
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6">
-          <pre className="text-sm text-zinc-300 whitespace-pre-wrap leading-relaxed font-mono">
+        <div className="flex-1 overflow-y-auto p-6 bg-[#FAFAFA]">
+          <pre className="text-sm text-[#1A1A1A] whitespace-pre-wrap leading-relaxed font-mono">
             {prompt}
           </pre>
         </div>
@@ -152,17 +138,10 @@ function TaskChatPanel({ taskId, task, onTaskUpdated }) {
               }))
           )
         } else {
-          // Auto-greeting: show a summary of the task
           const greeting = task?.task_summary
-            ? `Here's what we have for "${task.title}":\n\n${task.task_summary}\n\nHow would you like to refine this task? I can help update the implementation plan, clarify requirements, or adjust the scope.`
+            ? `Here's what we have for "${task.title}":\n\n${task.task_summary}\n\nHow would you like to refine this task?`
             : `Let's work on "${task?.title || 'this task'}". What would you like to discuss or refine?`
-          setMessages([
-            {
-              role: 'assistant',
-              content: greeting,
-              timestamp: formatTime(new Date()),
-            },
-          ])
+          setMessages([{ role: 'assistant', content: greeting, timestamp: formatTime(new Date()) }])
         }
       })
       .catch(() => {})
@@ -176,17 +155,9 @@ function TaskChatPanel({ taskId, task, onTaskUpdated }) {
 
     try {
       const data = await sendTaskMessage(taskId, text)
-      const assistantMsg = {
-        role: 'assistant',
-        content: data.response,
-        timestamp: formatTime(new Date()),
-      }
-      setMessages((prev) => [...prev, assistantMsg])
-
-      if (data.updated_task) {
-        onTaskUpdated(data.updated_task)
-      }
-    } catch (err) {
+      setMessages((prev) => [...prev, { role: 'assistant', content: data.response, timestamp: formatTime(new Date()) }])
+      if (data.updated_task) onTaskUpdated(data.updated_task)
+    } catch {
       setMessages((prev) => [
         ...prev,
         { role: 'assistant', content: 'Something went wrong. Please try again.', timestamp: formatTime(new Date()) },
@@ -199,7 +170,7 @@ function TaskChatPanel({ taskId, task, onTaskUpdated }) {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="h-6 w-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+        <div className="h-6 w-6 border-2 border-[#2A5FE6] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -242,10 +213,7 @@ export default function TaskDetail() {
 
   useEffect(() => {
     if (!taskId) return
-    Promise.all([
-      getTask(taskId),
-      getProject(projectId),
-    ])
+    Promise.all([getTask(taskId), getProject(projectId)])
       .then(([t, p]) => {
         setTask(t)
         setProjectName(p.name)
@@ -262,9 +230,7 @@ export default function TaskDetail() {
     try {
       const updated = await updateTask(taskId, { title: newTitle })
       setTask((prev) => ({ ...prev, ...updated }))
-    } catch {
-      // revert handled by EditableTitle
-    }
+    } catch {}
   }
 
   async function handleGeneratePrompt() {
@@ -282,21 +248,21 @@ export default function TaskDetail() {
 
   if (loading || userLoading) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="h-8 w-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="h-8 w-8 border-2 border-[#2A5FE6] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
 
   if (error && !task) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-6">
+      <div className="min-h-screen bg-white flex items-center justify-center px-6">
         <div className="text-center max-w-md">
-          <h1 className="text-xl font-bold text-zinc-100 mb-2">Couldn't load task</h1>
-          <p className="text-sm text-zinc-400 mb-6">{error}</p>
+          <h1 className="text-xl font-semibold text-[#1A1A1A] mb-2">Couldn't load task</h1>
+          <p className="text-sm text-[#6B6B6B] mb-6">{error}</p>
           <button
             onClick={() => navigate(`/project/${projectId}`)}
-            className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-lg transition-colors cursor-pointer"
+            className="px-5 py-2.5 bg-[#2A5FE6] hover:bg-[#1E4FCC] text-white text-sm font-medium rounded-lg transition-colors duration-150 cursor-pointer"
           >
             Back to Project
           </button>
@@ -306,20 +272,19 @@ export default function TaskDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
+    <div className="min-h-screen bg-white text-[#1A1A1A]">
       <main className="max-w-4xl mx-auto px-6 py-6 space-y-6">
-        {/* Error banner */}
         {error && (
-          <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/5 text-sm text-red-300">
+          <div className="p-4 rounded-xl border border-[#FECACA] bg-[#FEF2F2] text-sm text-[#DC2626]">
             {error}
           </div>
         )}
 
         {/* Task Summary Box */}
-        <div className="border border-zinc-800 rounded-xl bg-zinc-900/50 p-5">
+        <div className="border border-[#E5E5E5] rounded-xl bg-white p-6">
           <div className="flex items-start gap-3 mb-3">
-            <div className="w-9 h-9 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-              <svg className="w-5 h-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <div className="w-9 h-9 rounded-lg bg-[#F5F3FF] border border-[#DDD6FE] flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg className="w-5 h-5 text-[#7C3AED]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
@@ -332,7 +297,7 @@ export default function TaskDetail() {
           </div>
 
           {task.task_summary && (
-            <p className="text-sm text-zinc-400 leading-relaxed mt-3">
+            <p className="text-sm text-[#6B6B6B] leading-relaxed mt-3">
               {task.task_summary}
             </p>
           )}
@@ -342,13 +307,13 @@ export default function TaskDetail() {
               <button
                 type="button"
                 onClick={() => setPlanExpanded(!planExpanded)}
-                className="mt-3 text-xs text-indigo-400 hover:text-indigo-300 transition-colors cursor-pointer"
+                className="mt-3 text-xs text-[#2A5FE6] hover:underline transition-colors duration-150 cursor-pointer"
               >
                 {planExpanded ? 'Collapse plan' : 'Expand implementation plan'}
               </button>
 
               {planExpanded && (
-                <div className="mt-3 pt-3 border-t border-zinc-800 text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">
+                <div className="mt-4 pt-4 border-t border-[#F0F0F0] text-sm text-[#1A1A1A] leading-relaxed whitespace-pre-wrap">
                   {task.implementation_plan}
                 </div>
               )}
@@ -358,12 +323,11 @@ export default function TaskDetail() {
 
         {/* Action Buttons */}
         <div className="flex gap-3">
-          {/* Generate Prompt Button */}
           <button
             type="button"
             onClick={task.generated_prompt ? () => setPromptModalOpen(true) : handleGeneratePrompt}
             disabled={generating}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-colors cursor-pointer disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#2A5FE6] hover:bg-[#1E4FCC] text-white text-sm font-medium transition-colors duration-150 cursor-pointer disabled:opacity-50"
           >
             <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
@@ -371,11 +335,10 @@ export default function TaskDetail() {
             {generating ? 'Generating...' : task.generated_prompt ? 'View Prompt' : 'Generate Prompt'}
           </button>
 
-          {/* Chat Trigger */}
           <button
             type="button"
             onClick={() => setChatOpen(true)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-zinc-800 bg-zinc-900/30 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200 text-sm transition-all cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-[#E5E5E5] bg-white text-[#6B6B6B] hover:border-[#D4D4D4] hover:text-[#1A1A1A] text-sm transition-all duration-150 cursor-pointer"
           >
             <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 011.037-.443 48.282 48.282 0 005.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
@@ -388,30 +351,23 @@ export default function TaskDetail() {
       {/* Task Chat Slide-over */}
       {chatOpen && (
         <>
-          <div
-            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
-            onClick={() => setChatOpen(false)}
-          />
-          <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-[480px] bg-zinc-950 border-l border-zinc-800 flex flex-col shadow-2xl">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-800/50 flex-shrink-0">
+          <div className="fixed inset-0 z-40 bg-black/30" onClick={() => setChatOpen(false)} />
+          <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-[480px] bg-white border-l border-[#E5E5E5] flex flex-col shadow-xl">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-[#E5E5E5] flex-shrink-0">
               <div>
-                <h2 className="text-sm font-semibold">{task.title}</h2>
-                <p className="text-xs text-zinc-500">Task Chat</p>
+                <h2 className="text-sm font-semibold text-[#1A1A1A]">{task.title}</h2>
+                <p className="text-xs text-[#9B9B9B]">Task Chat</p>
               </div>
               <button
                 onClick={() => setChatOpen(false)}
-                className="text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer p-1"
+                className="text-[#9B9B9B] hover:text-[#1A1A1A] transition-colors duration-150 cursor-pointer p-1"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
-            <TaskChatPanel
-              taskId={taskId}
-              task={task}
-              onTaskUpdated={handleTaskUpdated}
-            />
+            <TaskChatPanel taskId={taskId} task={task} onTaskUpdated={handleTaskUpdated} />
           </div>
         </>
       )}

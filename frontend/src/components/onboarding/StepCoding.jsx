@@ -33,14 +33,14 @@ export default function StepCoding() {
                 value: l.value,
               })
             }
-            className={`w-full text-left px-4 py-3 rounded-lg border text-sm font-medium transition-all duration-200 cursor-pointer
+            className={`w-full text-left px-4 py-3 rounded-xl border text-sm font-medium transition-all duration-150 cursor-pointer
               ${
                 state.coding_comfort === l.value
-                  ? 'border-indigo-500 bg-indigo-500/10 text-indigo-300'
-                  : 'border-zinc-700 bg-zinc-800/50 text-zinc-300 hover:border-zinc-500 hover:bg-zinc-800'
+                  ? 'border-[#2A5FE6] bg-[#F0F5FF] text-[#2A5FE6]'
+                  : 'border-[#E5E5E5] bg-white text-[#1A1A1A] hover:border-[#D4D4D4] hover:bg-[#F5F5F5]'
               }`}
           >
-            <span className="text-zinc-500 mr-3">{l.value}</span>
+            <span className="text-[#9B9B9B] mr-3">{l.value}</span>
             {l.label}
           </button>
         ))}

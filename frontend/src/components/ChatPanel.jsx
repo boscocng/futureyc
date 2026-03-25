@@ -9,19 +9,16 @@ function MessageBubble({ role, content, timestamp }) {
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
       <div
-        className={`max-w-[80%] sm:max-w-[70%] rounded-2xl px-4 py-3 ${
+        className={`max-w-[80%] sm:max-w-[70%] px-4 py-3 ${
           isUser
-            ? 'bg-indigo-600 text-white rounded-br-md'
-            : 'bg-zinc-800 text-zinc-100 border border-zinc-700 rounded-bl-md'
+            ? 'bg-[#2A5FE6] text-white rounded-2xl rounded-br-[4px]'
+            : 'bg-white text-[#1A1A1A] border border-[#E5E5E5] rounded-2xl rounded-bl-[4px]'
         }`}
+        style={{ boxShadow: isUser ? 'none' : '0 1px 2px rgba(0,0,0,0.04)' }}
       >
         <p className="text-sm whitespace-pre-wrap leading-relaxed">{content}</p>
         {timestamp && (
-          <p
-            className={`text-xs mt-1.5 ${
-              isUser ? 'text-indigo-200' : 'text-zinc-500'
-            }`}
-          >
+          <p className={`text-xs mt-1.5 ${isUser ? 'text-blue-200' : 'text-[#9B9B9B]'}`}>
             {timestamp}
           </p>
         )}
@@ -33,28 +30,20 @@ function MessageBubble({ role, content, timestamp }) {
 function TypingIndicator() {
   return (
     <div className="flex justify-start mb-4">
-      <div className="bg-zinc-800 border border-zinc-700 rounded-2xl rounded-bl-md px-4 py-3">
+      <div
+        className="bg-white border border-[#E5E5E5] rounded-2xl rounded-bl-[4px] px-4 py-3"
+        style={{ boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}
+      >
         <div className="flex gap-1.5 items-center h-5">
-          <span className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce [animation-delay:0ms]" />
-          <span className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce [animation-delay:150ms]" />
-          <span className="w-2 h-2 bg-zinc-500 rounded-full animate-bounce [animation-delay:300ms]" />
+          <span className="w-2 h-2 bg-[#D4D4D4] rounded-full animate-bounce [animation-delay:0ms]" />
+          <span className="w-2 h-2 bg-[#D4D4D4] rounded-full animate-bounce [animation-delay:150ms]" />
+          <span className="w-2 h-2 bg-[#D4D4D4] rounded-full animate-bounce [animation-delay:300ms]" />
         </div>
       </div>
     </div>
   )
 }
 
-/**
- * Reusable chat panel.
- *
- * Props:
- *  - messages: [{ role, content, timestamp }]
- *  - onSend(text): async — called when user hits send
- *  - sending: bool
- *  - disabled: bool — disables input entirely
- *  - placeholder: string
- *  - className: string — extra classes on the outer wrapper
- */
 export default function ChatPanel({
   messages,
   onSend,
@@ -86,7 +75,7 @@ export default function ChatPanel({
   return (
     <div className={`flex flex-col ${className}`}>
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4">
+      <div className="flex-1 overflow-y-auto px-4 py-5 bg-[#F7F7F5]">
         {messages.map((msg, i) => (
           <MessageBubble key={i} {...msg} />
         ))}
@@ -96,7 +85,7 @@ export default function ChatPanel({
 
       {/* Input */}
       {!disabled && (
-        <div className="border-t border-zinc-800/50 px-4 py-3 flex-shrink-0">
+        <div className="border-t border-[#E5E5E5] bg-white px-4 py-3 flex-shrink-0">
           <form onSubmit={handleSubmit} className="flex gap-3">
             <input
               ref={inputRef}
@@ -105,30 +94,20 @@ export default function ChatPanel({
               onChange={(e) => setInput(e.target.value)}
               placeholder={sending ? 'Waiting for response...' : placeholder}
               disabled={sending}
-              className="flex-1 bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors disabled:opacity-50"
+              className="flex-1 bg-white border border-[#D4D4D4] rounded-lg px-4 py-2.5 text-sm text-[#1A1A1A] placeholder-[#9B9B9B] focus:outline-none focus:border-[#2A5FE6] focus:ring-1 focus:ring-[#2A5FE6]/20 transition-colors duration-150 disabled:opacity-50"
             />
             <button
               type="submit"
               disabled={!input.trim() || sending}
-              className={`px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 cursor-pointer flex-shrink-0
+              className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 cursor-pointer flex-shrink-0
                 ${
                   input.trim() && !sending
-                    ? 'bg-indigo-600 hover:bg-indigo-500 text-white'
-                    : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
+                    ? 'bg-[#2A5FE6] hover:bg-[#1E4FCC] text-white'
+                    : 'bg-[#F5F5F5] text-[#9B9B9B] cursor-not-allowed'
                 }`}
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 12L3.27 3.126A59.77 59.77 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                />
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.27 3.126A59.77 59.77 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
               </svg>
             </button>
           </form>

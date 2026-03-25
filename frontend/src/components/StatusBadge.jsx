@@ -1,14 +1,14 @@
 const styles = {
   // project statuses
-  interviewing: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-  active: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-  archived: 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20',
+  interviewing: 'bg-[#FEF9C3] text-[#A16207] border-[#FDE68A]',
+  active:       'bg-[#F0FDF4] text-[#16A34A] border-[#BBF7D0]',
+  archived:     'bg-[#F5F5F5] text-[#9B9B9B] border-[#E5E5E5]',
   // task statuses
-  defining: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-  planned: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-  prompt_ready: 'bg-violet-500/10 text-violet-400 border-violet-500/20',
-  in_progress: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
-  done: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+  defining:     'bg-[#FEF9C3] text-[#A16207] border-[#FDE68A]',
+  planned:      'bg-[#EEF2FF] text-[#2A5FE6] border-[#C7D7FC]',
+  prompt_ready: 'bg-[#F5F3FF] text-[#7C3AED] border-[#DDD6FE]',
+  in_progress:  'bg-[#EEF2FF] text-[#2A5FE6] border-[#C7D7FC]',
+  done:         'bg-[#F0FDF4] text-[#16A34A] border-[#BBF7D0]',
 }
 
 const labels = {
