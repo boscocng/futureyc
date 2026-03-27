@@ -10,8 +10,11 @@ import Interview from './pages/Interview'
 import ProjectDetail from './pages/ProjectDetail'
 import TaskDetail from './pages/TaskDetail'
 import Settings from './pages/Settings'
+import TaskWorkspaceMock from './pages/TaskWorkspaceMock'
+import InterviewMock from './pages/InterviewMock'
+import Brief from './pages/Brief'
 
-const NAV_HIDDEN_ROUTES = ['/onboarding', '/']
+const NAV_HIDDEN_ROUTES = ['/onboarding', '/', '/brief']
 
 function AppLayout({ children }) {
   const { pathname } = useLocation()
@@ -41,6 +44,9 @@ export default function App() {
             <Route path="/project/:id/task/:taskId" element={<TaskDetail />} />
             <Route path="/project/:id" element={<ProjectDetail />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/workspace" element={<TaskWorkspaceMock />} />
+            <Route path="/interview-mock" element={<InterviewMock />} />
+            <Route path="/brief" element={<Brief />} />
           </Routes>
         </AppLayout>
       </NavProvider>
